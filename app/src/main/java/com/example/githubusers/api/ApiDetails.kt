@@ -20,7 +20,8 @@ interface ApiDetails {
     @GET("$USERS_END_POINT/{user}/{followersOrFollowing}")
     suspend fun getFollowers(
         @Path("user")user: String,
-        @Path("followersOrFollowing") followersOrFollowing: String
+        @Path("followersOrFollowing") followersOrFollowing: String,
+        @Header("Authorization") token: String = TOKEN
     ): Response<Users>
 
 //    @GET("$USERS_END_POINT/{user}")
