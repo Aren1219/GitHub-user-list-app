@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.githubusers.models.list.Users
 import com.example.githubusers.models.list.UsersItem
+import com.example.githubusers.models.user.User
 import com.example.githubusers.repository.Repository
 import com.example.githubusers.room.UsersEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +25,7 @@ class MainViewModel @Inject constructor(
 
     var readUsers: LiveData<UsersEntity> = repository.getLocalData()
 
-    var selectedUser: MutableLiveData<UsersItem?> = MutableLiveData()
+    var selectedUser: MutableLiveData<User?> = MutableLiveData()
     var followers: MutableLiveData<Users> = MutableLiveData()
     var following: MutableLiveData<Users> = MutableLiveData()
 
@@ -32,12 +33,12 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             if (!repository.checkIfLocalExists()) {
                 Log.d(TAG, "no local found")
-                getRemoteData()
+                getRemoteListData()
             }
         }
     }
 
-    private suspend fun getRemoteData() {
+    private suspend fun getRemoteListData() {
         try {
             val response = repository.getRemoteData()
             if (response.isSuccessful) {
@@ -48,12 +49,19 @@ class MainViewModel @Inject constructor(
         } catch (e:Exception) { }
     }
 
-    fun selectUser(usersItem: UsersItem) {
-        selectedUser.postValue(usersItem)
+    fun selectUser(userLogin: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = repository.getUser(userLogin)
+                if (response.isSuccessful){
+                    selectedUser.postValue(response.body())
+                }
+            } catch (e:Exception){}
+        }
     }
 
     fun deselectUser() {
-        selectedUser.postValue(null)
+        selectedUser.value = null
     }
 
     fun getFollowers(getFollowing: Boolean = false) {

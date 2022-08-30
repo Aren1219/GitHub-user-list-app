@@ -5,15 +5,19 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.githubusers.models.list.Users
 import com.example.githubusers.models.list.UsersItem
@@ -25,6 +29,7 @@ fun UsersListPage(
     viewModel: MainViewModel
 ) {
     val data = viewModel.readUsers.observeAsState()
+    var search by rememberSaveable { mutableStateOf("") }
     Column() {
         Surface(
             color = MaterialTheme.colors.primary,
@@ -36,14 +41,18 @@ fun UsersListPage(
                 modifier = Modifier.padding(8.dp)
             )
         }
-        SearchBar()
+        SearchBar(
+            text = search,
+            onTextChange = {text -> search = text},
+            onSearchClicked = {text -> viewModel.selectUser(text)}
+        )
         Surface(
             color = MaterialTheme.colors.primaryVariant
         ) {
             data.value?.users?.let {
                 UsersList(
                     users = it,
-                    selectUser = { user ->  viewModel.selectUser(user)}
+                    selectUser = { user ->  viewModel.selectUser(user.login)}
                 )
             }
         }
@@ -52,11 +61,14 @@ fun UsersListPage(
 
 @Composable
 fun SearchBar(
+    text: String,
+    onTextChange: (String) -> Unit,
+    onSearchClicked: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     TextField(
-        value = "",
-        onValueChange = {},
+        value = text,
+        onValueChange = onTextChange,
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
@@ -69,9 +81,12 @@ fun SearchBar(
         placeholder = {
             Text("search user")
         },
+        singleLine = true,
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = 56.dp)
+            .heightIn(min = 56.dp),
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+        keyboardActions = KeyboardActions(onSearch = { onSearchClicked(text) })
     )
 }
 

@@ -2,6 +2,7 @@ package com.example.githubusers.repository
 
 import androidx.lifecycle.LiveData
 import com.example.githubusers.models.list.Users
+import com.example.githubusers.models.user.User
 import com.example.githubusers.room.UsersEntity
 import retrofit2.Response
 
@@ -14,4 +15,6 @@ interface Repository {
     suspend fun insertDataToDb(usersEntity: UsersEntity)
 
     suspend fun checkIfLocalExists(): Boolean
+
+    suspend fun getUser(user: String): Response<User>
 }

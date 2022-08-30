@@ -16,6 +16,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.example.githubusers.models.list.Users
 import com.example.githubusers.models.list.UsersItem
+import com.example.githubusers.models.user.User
 import com.example.githubusers.ui.MainViewModel
 import com.skydoves.landscapist.glide.GlideImage
 
@@ -58,7 +59,7 @@ fun UserDetailsPage(
                 followers.value?.let { it1 ->
                     following.value?.let { it2 ->
                         UserDetails(
-                            usersItem = it,
+                            user = it,
                             followers = it1,
                             following = it2
                         )
@@ -70,7 +71,7 @@ fun UserDetailsPage(
 }
 
 @Composable
-fun UserDetails(usersItem: UsersItem, followers: Users, following: Users) {
+fun UserDetails(user: User, followers: Users, following: Users) {
     Card(
         modifier = Modifier
             .fillMaxSize()
@@ -78,7 +79,7 @@ fun UserDetails(usersItem: UsersItem, followers: Users, following: Users) {
         backgroundColor = MaterialTheme.colors.primary
     ) {
         Column() {
-            UserNameAndAvatar(usersItem = usersItem)
+            UserNameAndAvatar(user = user)
             FollowersList(users = followers, "Followers")
             FollowersList(users = following, title = "Following")
         }
@@ -86,7 +87,7 @@ fun UserDetails(usersItem: UsersItem, followers: Users, following: Users) {
 }
 
 @Composable
-fun UserNameAndAvatar(usersItem: UsersItem){
+fun UserNameAndAvatar(user: User){
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -94,14 +95,14 @@ fun UserNameAndAvatar(usersItem: UsersItem){
             .padding(8.dp)
     ) {
         GlideImage(
-            imageModel = usersItem.avatarUrl,
+            imageModel = user.avatarUrl,
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(100.dp)
                 .clip(CircleShape),
         )
         Text(
-            text = usersItem.login,
+            text = user.login,
             style = MaterialTheme.typography.h3
         )
     }
@@ -149,3 +150,4 @@ fun FollowersList(users: Users, title: String) {
         }
     }
 }
+

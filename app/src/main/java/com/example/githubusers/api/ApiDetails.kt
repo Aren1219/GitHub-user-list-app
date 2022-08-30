@@ -4,6 +4,7 @@ import com.example.githubusers.api.ApiReferences.ACCEPT
 import com.example.githubusers.api.ApiReferences.USERS_END_POINT
 import com.example.githubusers.api.ApiReferences.TOKEN
 import com.example.githubusers.models.list.Users
+import com.example.githubusers.models.user.User
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -24,11 +25,11 @@ interface ApiDetails {
         @Header("Authorization") token: String = TOKEN
     ): Response<Users>
 
-//    @GET("$USERS_END_POINT/{user}")
-//    suspend fun searchUser(
-//        @Header("accept") accept: String = ACCEPT,
-//        @Header("Authorization") token: String = TOKEN,
-//        @Path("user") user: String
-//    )
+    @GET("$USERS_END_POINT/{user}")
+    suspend fun getUser(
+        @Path("user") user: String,
+        @Header("accept") accept: String = ACCEPT,
+        @Header("Authorization") token: String = TOKEN
+    ): Response<User>
 
 }

@@ -5,6 +5,7 @@ import com.example.githubusers.api.ApiDetails
 import com.example.githubusers.api.ApiReferences.FOLLOWERS
 import com.example.githubusers.api.ApiReferences.FOLLOWING
 import com.example.githubusers.models.list.Users
+import com.example.githubusers.models.user.User
 import com.example.githubusers.room.UsersDao
 import com.example.githubusers.room.UsersEntity
 import retrofit2.Response
@@ -39,5 +40,8 @@ class RepositoryImp @Inject constructor(
             false
         }
     }
+
+    override suspend fun getUser(user: String): Response<User> =
+        apiDetails.getUser(user)
 }
 
