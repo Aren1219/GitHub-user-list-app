@@ -13,24 +13,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
-import com.example.githubusers.models.Users
-import com.example.githubusers.models.UsersItem
-import com.example.githubusers.ui.list.UsersListViewModel
+import com.example.githubusers.models.list.Users
+import com.example.githubusers.models.list.UsersItem
+import com.example.githubusers.ui.MainViewModel
 import com.skydoves.landscapist.glide.GlideImage
-import java.util.*
 
 @Composable
 fun UserDetailsPage(
-    viewModel: UsersListViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    viewModel: MainViewModel,
 ) {
 
-    viewModel.getFollowers(false)
-    viewModel.getFollowers(true)
+    val user = viewModel.selectedUser.observeAsState()
     val followers = viewModel.followers.observeAsState()
     val following = viewModel.following.observeAsState()
-    val user = viewModel.selectedUser.observeAsState()
+    viewModel.getFollowers(false)
+    viewModel.getFollowers(true)
 
     Column() {
         Surface(

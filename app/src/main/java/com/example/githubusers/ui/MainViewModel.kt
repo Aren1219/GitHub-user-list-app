@@ -1,14 +1,12 @@
-package com.example.githubusers.ui.list
+package com.example.githubusers.ui
 
 import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.githubusers.models.Users
-import com.example.githubusers.models.UsersItem
+import com.example.githubusers.models.list.Users
+import com.example.githubusers.models.list.UsersItem
 import com.example.githubusers.repository.Repository
 import com.example.githubusers.room.UsersEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +16,7 @@ import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
-class UsersListViewModel @Inject constructor(
+class MainViewModel @Inject constructor(
     val repository: Repository
 ): ViewModel() {
 
@@ -52,7 +50,6 @@ class UsersListViewModel @Inject constructor(
 
     fun selectUser(usersItem: UsersItem) {
         selectedUser.postValue(usersItem)
-        Log.d(TAG, "selected ${selectedUser?.value?.login}")
     }
 
     fun deselectUser() {

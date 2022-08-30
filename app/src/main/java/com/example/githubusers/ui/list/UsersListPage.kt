@@ -6,6 +6,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -13,13 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import com.example.githubusers.models.Users
-import com.example.githubusers.models.UsersItem
+import com.example.githubusers.models.list.Users
+import com.example.githubusers.models.list.UsersItem
+import com.example.githubusers.ui.MainViewModel
 import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
 fun UsersListPage(
-    viewModel: UsersListViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: MainViewModel
 ) {
     val data = viewModel.readUsers.observeAsState()
     Column() {
@@ -33,6 +36,7 @@ fun UsersListPage(
                 modifier = Modifier.padding(8.dp)
             )
         }
+        SearchBar()
         Surface(
             color = MaterialTheme.colors.primaryVariant
         ) {
@@ -44,6 +48,31 @@ fun UsersListPage(
             }
         }
     }
+}
+
+@Composable
+fun SearchBar(
+    modifier: Modifier = Modifier
+) {
+    TextField(
+        value = "",
+        onValueChange = {},
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = null
+            )
+        },
+        colors = TextFieldDefaults.textFieldColors(
+            backgroundColor = MaterialTheme.colors.surface
+        ),
+        placeholder = {
+            Text("search user")
+        },
+        modifier = modifier
+            .fillMaxWidth()
+            .heightIn(min = 56.dp)
+    )
 }
 
 @Composable

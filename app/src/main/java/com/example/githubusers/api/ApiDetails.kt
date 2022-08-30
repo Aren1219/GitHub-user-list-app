@@ -3,7 +3,7 @@ package com.example.githubusers.api
 import com.example.githubusers.api.ApiReferences.ACCEPT
 import com.example.githubusers.api.ApiReferences.USERS_END_POINT
 import com.example.githubusers.api.ApiReferences.TOKEN
-import com.example.githubusers.models.Users
+import com.example.githubusers.models.list.Users
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -15,7 +15,6 @@ interface ApiDetails {
     suspend fun getUsers(
         @Header("accept") accept: String = ACCEPT,
         @Header("Authorization") token: String = TOKEN,
-//        @Query("per_page") perPage: Int = PER_PAGE
     ) :Response<Users>
 
     @GET("$USERS_END_POINT/{user}/{followersOrFollowing}")
@@ -23,4 +22,12 @@ interface ApiDetails {
         @Path("user")user: String,
         @Path("followersOrFollowing") followersOrFollowing: String
     ): Response<Users>
+
+//    @GET("$USERS_END_POINT/{user}")
+//    suspend fun searchUser(
+//        @Header("accept") accept: String = ACCEPT,
+//        @Header("Authorization") token: String = TOKEN,
+//        @Path("user") user: String
+//    )
+
 }

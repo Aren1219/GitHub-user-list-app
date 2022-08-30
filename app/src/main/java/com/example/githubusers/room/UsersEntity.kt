@@ -2,7 +2,7 @@ package com.example.githubusers.room
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.githubusers.models.Users
+import com.example.githubusers.models.list.Users
 
 @Entity(tableName = "Users")
 data class UsersEntity(

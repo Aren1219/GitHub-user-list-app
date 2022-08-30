@@ -11,7 +11,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import com.example.githubusers.ui.details.UserDetailsPage
 import com.example.githubusers.ui.list.UsersListPage
-import com.example.githubusers.ui.list.UsersListViewModel
 import com.example.githubusers.ui.theme.GitHubUsersTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,7 +29,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen(
-    viewModel: UsersListViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ){
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -39,8 +38,8 @@ fun MainScreen(
         val user = viewModel.selectedUser.observeAsState()
 
         if (user.value == null)
-            UsersListPage()
+            UsersListPage(viewModel)
         else
-            UserDetailsPage()
+            UserDetailsPage(viewModel)
     }
 }

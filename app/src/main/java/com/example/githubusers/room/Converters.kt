@@ -1,7 +1,7 @@
 package com.example.githubusers.room
 
 import androidx.room.TypeConverter
-import com.example.githubusers.models.Users
+import com.example.githubusers.models.list.Users
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 

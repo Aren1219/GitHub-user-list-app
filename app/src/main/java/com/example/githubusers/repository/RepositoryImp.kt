@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import com.example.githubusers.api.ApiDetails
 import com.example.githubusers.api.ApiReferences.FOLLOWERS
 import com.example.githubusers.api.ApiReferences.FOLLOWING
-import com.example.githubusers.models.Users
+import com.example.githubusers.models.list.Users
 import com.example.githubusers.room.UsersDao
 import com.example.githubusers.room.UsersEntity
 import retrofit2.Response
@@ -32,6 +32,12 @@ class RepositoryImp @Inject constructor(
 
     override fun getLocalData(): LiveData<UsersEntity> = usersDao.readUsers()
 
-    override suspend fun checkIfLocalExists() = usersDao.getUsers().users.size != 0
+    override suspend fun checkIfLocalExists(): Boolean {
+        return try {
+            usersDao.getUsers().users.size > 0
+        } catch (e:Exception){
+            false
+        }
+    }
 }
 
