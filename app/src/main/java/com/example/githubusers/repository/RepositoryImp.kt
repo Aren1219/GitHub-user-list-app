@@ -33,13 +33,8 @@ class RepositoryImp @Inject constructor(
 
     override fun getLocalData(): LiveData<UsersEntity> = usersDao.readUsers()
 
-    override suspend fun checkIfLocalExists(): Boolean {
-        return try {
-            usersDao.getUsers().users.size > 0
-        } catch (e:Exception){
-            false
-        }
-    }
+    override suspend fun checkIfLocalExists(): Boolean =
+        if (usersDao.getUsers() == null) false else true
 
     override suspend fun getUser(user: String): Response<User> =
         apiDetails.getUser(user)

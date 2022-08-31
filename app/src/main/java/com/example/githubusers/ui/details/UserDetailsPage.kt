@@ -1,9 +1,13 @@
 package com.example.githubusers.ui.details
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -14,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.githubusers.models.list.Users
 import com.example.githubusers.models.list.UsersItem
 import com.example.githubusers.models.user.User
@@ -61,7 +66,8 @@ fun UserDetailsPage(
                         UserDetails(
                             user = it,
                             followers = it1,
-                            following = it2
+                            following = it2,
+                            selectUser = { user -> viewModel.selectUser(user) }
                         )
                     }
                 }
@@ -71,17 +77,31 @@ fun UserDetailsPage(
 }
 
 @Composable
-fun UserDetails(user: User, followers: Users, following: Users) {
+fun UserDetails(
+    user: User,
+    followers: Users,
+    following: Users,
+    selectUser: (String) -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxSize()
             .padding(8.dp),
         backgroundColor = MaterialTheme.colors.primary
     ) {
-        Column() {
+        Column(Modifier.verticalScroll(rememberScrollState())) {
             UserNameAndAvatar(user = user)
-            FollowersList(users = followers, "Followers")
-            FollowersList(users = following, title = "Following")
+            UserBio(user = user)
+            FollowersList(
+                users = followers,
+                title = "Followers",
+                selectUser = {userLogin -> selectUser(userLogin)}
+            )
+            FollowersList(
+                users = following,
+                title = "Following",
+                selectUser = {userLogin -> selectUser(userLogin)}
+            )
         }
     }
 }
@@ -101,31 +121,35 @@ fun UserNameAndAvatar(user: User){
                 .size(100.dp)
                 .clip(CircleShape),
         )
-        Text(
-            text = user.login,
-            style = MaterialTheme.typography.h3
-        )
+        Text(text = user.login, style = MaterialTheme.typography.h3)
+        if (user.name != null)
+            Text(text = user.name,style = MaterialTheme.typography.h5)
+        if (user.location != null)
+            Text(text = user.location,style = MaterialTheme.typography.h5)
+        if (user.email != null)
+            Text(text = user.email, style = MaterialTheme.typography.h5)
     }
 }
 
 @Composable
-fun FollowerItem(usersItem: UsersItem) {
+fun FollowerItem(usersItem: UsersItem, onClick: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable(enabled = true, onClick = onClick),
     ) {
         GlideImage(
             imageModel = usersItem.avatarUrl,
             modifier = Modifier
                 .size(70.dp)
                 .clip(CircleShape),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
         )
         Text(text = usersItem.login)
     }
 }
 
 @Composable
-fun FollowersList(users: Users, title: String) {
+fun FollowersList(users: Users, title: String, selectUser: (String) -> Unit) {
     val paddingValue = 8.dp
     Column() {
         Text(
@@ -139,7 +163,10 @@ fun FollowersList(users: Users, title: String) {
                 contentPadding = PaddingValues(horizontal = paddingValue)
             ) {
                 items(users) { item ->
-                    FollowerItem(usersItem = item)
+                    FollowerItem(
+                        usersItem = item,
+                        onClick = { selectUser(item.login) }
+                    )
                 }
             }
         } else {
@@ -151,3 +178,18 @@ fun FollowersList(users: Users, title: String) {
     }
 }
 
+@Composable
+fun UserBio(user: User) {
+    val paddingValue = 8.dp
+    Column() {
+        Text(
+            text = "Bio",
+            modifier = Modifier.padding(paddingValue),
+            style = MaterialTheme.typography.h5
+        )
+        Text(
+            text = if (user.bio != null) user.bio else "no bio",
+            modifier = Modifier.padding(horizontal = paddingValue)
+        )
+    }
+}
