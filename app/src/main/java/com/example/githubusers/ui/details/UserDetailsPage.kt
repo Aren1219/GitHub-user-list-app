@@ -33,8 +33,6 @@ fun UserDetailsPage(
     val user = viewModel.selectedUser.observeAsState()
     val followers = viewModel.followers.observeAsState()
     val following = viewModel.following.observeAsState()
-    viewModel.getFollowers(false)
-    viewModel.getFollowers(true)
 
     Column() {
         Surface(
